@@ -1,6 +1,5 @@
 import React from 'react';
 import { Tabs } from 'antd';
-import BillingAddressForm from './BillingAddressForm';
 import ContactPersonsTab from './ContactPersonsTab';
 // import type { TabsProps } from 'antd';
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, Grid } from "antd";
 import Header from "./Header";
 import AddVendorForm from './AddVendorForm';

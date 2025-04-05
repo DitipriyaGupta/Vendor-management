@@ -80,6 +80,10 @@ const AddVendorForm: React.FC = () => {
     }
   };
 
+  const onFinishFailed = () => {
+    messageApi.error("Please fill all required fields correctly.");
+  };
+
   const handlePrint = () => {
     window.print();
   }
@@ -102,6 +106,7 @@ const AddVendorForm: React.FC = () => {
         labelAlign="left"
         form={form}
         onFinish={(values) => onFinish(values)}
+        onFinishFailed={onFinishFailed}
         layout="horizontal"
         style={{
           maxWidth: 1000,
