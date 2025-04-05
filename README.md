@@ -7,3 +7,6 @@
 2.   ```npm run dev``` (to run the app locally)
 
 Project should be up & running on ```localhost:5173```
+
+## Live deployed URL
+### URL -> https://vendor-management-form.netlify.app/
