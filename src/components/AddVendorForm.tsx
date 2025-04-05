@@ -1,7 +1,6 @@
-// Final AddVendorForm.tsx with validation for companyName and email before Save/Exit
 import React from "react";
-import { Form, Input, Select, Checkbox, Button, message } from "antd";
-import { PhoneOutlined } from "@ant-design/icons";
+import { Form, Input, Select, Checkbox, Button, message, Grid } from "antd";
+import { PhoneOutlined, PrinterOutlined } from "@ant-design/icons";
 import TabsComponent from "./TabsComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
@@ -9,14 +8,16 @@ import { addVendorData, resetVendor } from "../store/slices/vendorSlice";
 import { useNavigate } from "react-router";
 
 const { Option } = Select;
+const { useBreakpoint } = Grid;
+
 const formItemLayout = {
   labelCol: {
-    xs: { span: 14 },
-    sm: { span: 5 },
+    xs: { span: 24 },
+    sm: { span: 6 },
   },
   wrapperCol: {
-    xs: { span: 14 },
-    sm: { span: 10 },
+    xs: { span: 24 },
+    sm: { span: 14 },
   },
 };
 
@@ -26,6 +27,7 @@ const AddVendorForm: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const screens = useBreakpoint();
 
   const onFinish = async (values?: any, shouldNavigate = false) => {
     try {
@@ -68,6 +70,7 @@ const AddVendorForm: React.FC = () => {
         type: "success",
         content: "Vendor data saved successfully.",
       });
+
       if (shouldNavigate) navigate("/");
     } catch (err) {
       messageApi.open({
@@ -77,33 +80,39 @@ const AddVendorForm: React.FC = () => {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  }
+
   const handleCancel = () => {
-
     dispatch(resetVendor());
-    
-    const event = new CustomEvent('cancelAddPerson');
-
+    const event = new CustomEvent("cancelAddPerson");
     window.dispatchEvent(event);
-
     form.resetFields();
-
   };
 
   return (
     <>
       {contextHolder}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '2rem', marginBottom: '1.5rem' }}>
+        <Button icon={<PrinterOutlined />} color="cyan" variant="solid" onClick={handlePrint}>Print</Button>
+      </div>
       <Form
         {...formItemLayout}
         labelAlign="left"
         form={form}
         onFinish={(values) => onFinish(values)}
         layout="horizontal"
-        style={{ margin: "0 auto", padding: "1.5rem" }}
+        style={{
+          maxWidth: 1000,
+
+          padding: screens.xs ? "1rem" : "1rem",
+        }}
       >
         <h2
           style={{
             marginBottom: "1.5rem",
-            textAlign: "left",
+            textAlign: screens.xs ? "center" : "left",
             fontWeight: "bold",
             fontSize: "16px",
           }}
@@ -112,38 +121,39 @@ const AddVendorForm: React.FC = () => {
         </h2>
 
         <Form.Item label="Primary Contact" colon={false}>
-          <Form.Item name="salutation" noStyle>
-            <Select
-              placeholder="Select"
-              defaultValue="Mr."
-              style={{
-                display: "inline-block",
-                width: "calc(20% - 2px)",
-              }}
-            >
-              <Option value="Mr.">Mr.</Option>
-              <Option value="Ms.">Ms.</Option>
-              <Option value="Dr.">Dr.</Option>
-            </Select>
-          </Form.Item>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: screens.xs ? "column" : "row",
+              gap: 8,
+            }}
+          >
+            <Form.Item name="salutation" noStyle>
+              <Select
+                placeholder="Select"
+                defaultValue="Mr."
+                style={{ width: screens.xs ? "100%" : "20%" }}
+              >
+                <Option value="Mr.">Mr.</Option>
+                <Option value="Ms.">Ms.</Option>
+                <Option value="Dr.">Dr.</Option>
+              </Select>
+            </Form.Item>
 
-          <Form.Item name="firstName" noStyle>
-            <Input
-              placeholder="First Name"
-              style={{
-                display: "inline-block",
-                width: "calc(40% - 8px)",
-                margin: "0 8px",
-              }}
-            />
-          </Form.Item>
+            <Form.Item name="firstName" noStyle>
+              <Input
+                placeholder="First Name"
+                style={{ width: screens.xs ? "100%" : "40%" }}
+              />
+            </Form.Item>
 
-          <Form.Item name="lastName" noStyle>
-            <Input
-              placeholder="Last Name"
-              style={{ display: "inline-block", width: "calc(40% - 8px)" }}
-            />
-          </Form.Item>
+            <Form.Item name="lastName" noStyle>
+              <Input
+                placeholder="Last Name"
+                style={{ width: screens.xs ? "100%" : "40%" }}
+              />
+            </Form.Item>
+          </div>
         </Form.Item>
 
         <Form.Item
@@ -213,7 +223,13 @@ const AddVendorForm: React.FC = () => {
           label="Communication Channels"
           colon={false}
         >
-          <Checkbox.Group style={{ marginRight: "20rem" }}>
+          <Checkbox.Group
+            style={{
+              display: "flex",
+              flexDirection: screens.xs ? "column" : "row",
+              gap: "1rem",
+            }}
+          >
             <Checkbox value="Email">Email</Checkbox>
             <Checkbox value="SMS">SMS</Checkbox>
           </Checkbox.Group>
@@ -223,31 +239,37 @@ const AddVendorForm: React.FC = () => {
 
         <Form.Item
           style={{
-            textAlign: "right",
+            textAlign: screens.xs ? "center" : "right",
             width: "100%",
+            marginTop: "2rem",
           }}
-          wrapperCol={{ offset: 6, span: 18 }}
+          wrapperCol={{
+            offset: screens.xs ? 0 : 6,
+            span: screens.xs ? 24 : 18,
+          }}
         >
-          <Button type="primary" onClick={() => onFinish(undefined, true)}>
-            Save and Exit
-          </Button>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginLeft: 10 }}
-            onClick={() => onFinish(undefined, false)}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: screens.xs ? "column" : "row",
+              gap: "1rem",
+              justifyContent: screens.xs ? "center" : "flex-end",
+            }}
           >
-            Save
-          </Button>
-          <Button
-            onClick={handleCancel}
-            style={{ marginLeft: 10 }}
-          >
-            Cancel
-          </Button>
+            <Button type="primary" onClick={() => onFinish(undefined, true)}>
+              Save and Exit
+            </Button>
+            <Button type="primary" htmlType="submit">
+              Save
+            </Button>
+            <Button onClick={handleCancel}>Cancel</Button>
+          </div>
         </Form.Item>
       </Form>
-      <pre>{JSON.stringify(vendor, null, 2)}</pre>
+      <div style={{textAlign:"left"}}>
+        <h1>Redux state</h1>
+        <pre>{JSON.stringify(vendor, null, 2)}</pre>
+      </div>
     </>
   );
 };

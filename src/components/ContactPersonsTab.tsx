@@ -174,7 +174,7 @@ const ContactPersonsTab: React.FC = () => {
       render: (_: any, record: ContactPerson) => {
         const editable = isEditing(record);
         return editable ? (
-          <span>
+          <span style={{ display: 'flex', gap: 8 }}>
             <Button type="primary" onClick={() => save(record.key)} style={{ marginRight: 2 }}>Save</Button>
             <Popconfirm title="Cancel changes?" onConfirm={cancel}>
               <Button>Cancel</Button>
